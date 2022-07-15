@@ -1,0 +1,46 @@
+{
+
+  "Color": {
+    "blue": { a: 1.0, b: 0.45490196, g: 0.22352941, r: 0.16470589 },
+    "sesame": { a: 1.0, b: 0.5019608, g: 0.8627451, r: 0.73333335 },
+    "sesame-font-color": { a: 1.0, b: 0.3372549, g: 0.34901962, r: 0.43529412 },
+    "cow-bg": { a: 0.5, b: 0.7647059, g: 0.5764706, r: 0.57254905 },
+    "grass-bg": { a: 0.5, b: 0.30588236, g: 0.7647059, r: 0.3529412 },
+    "wolf-bg": { a: 0.5019608, b: 0.41960785, g: 0.35686275, r: 0.34901962 },
+  }
+
+  "LabelStyle": {
+    "default": {
+      "font": "font-32",
+      "fontColor": "white"
+    },
+    "hp": {
+      "font": "font-38",
+      "fontColor": "red"
+    },
+    "eat": {
+      "font": "font-28",
+      "fontColor": "blue"
+    },
+    "sesame": {
+      "font": "font-28",
+      "fontColor": "sesame-font-color"
+    }
+  },
+  "ButtonStyle":{
+    "nextTurn":{
+      "up": "play-button",
+      "down": "play-button-pressed"
+    },
+    "plus":{
+      "down": "plus",
+      "up": "plus-press"
+    },
+    "minus":{
+      "down": "minus",
+      "up": "minus-press"
+    },
+  },
+
+
+}
