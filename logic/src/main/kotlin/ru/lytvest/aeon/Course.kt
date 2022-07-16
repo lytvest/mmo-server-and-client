@@ -1,8 +1,8 @@
 package ru.lytvest.aeon
 
 class Course {
-    val left = mutableMapOf<String, Float>()
-    val right = mutableMapOf<String, Float>()
+    val left = mutableMapOf<String, Double>()
+    val right = mutableMapOf<String, Double>()
     override fun toString(): String {
         return buildString {
             append("Left: | ")
