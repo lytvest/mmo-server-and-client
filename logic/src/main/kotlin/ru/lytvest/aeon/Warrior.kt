@@ -3,6 +3,8 @@ package ru.lytvest.aeon
 import com.google.gson.GsonBuilder
 import ru.lytvest.learn.GeneticAlgorithm
 import ru.lytvest.learn.ListBuysAI
+import java.io.File
+import java.io.PrintWriter
 import kotlin.random.Random
 
 class Warrior : Hero() {
@@ -11,6 +13,7 @@ class Warrior : Hero() {
 
 
 fun main() {
+    val gson = GsonBuilder().create()
     val gen = object : GeneticAlgorithm<ListBuysAI>() {
         val COUNT = Hero().shop.size
         val dashboard = mutableMapOf<ListBuysAI, Double>()
@@ -24,8 +27,11 @@ fun main() {
 
                 val battle = Battle(Hero("#_${ai.id}"), Hero("#_${ai1.id}"))
                 battle.nextGame(ai, ai1)
-                if (battle.leftWins > battle.rightWins){
+                if (battle.leftWins == 5 && battle.rightWins == 0){
                     dashboard[ai] = dashboard[ai]!! + 1.0
+                } else if (battle.leftWins > battle.rightWins){
+                    dashboard[ai] = dashboard[ai]!! + 0.9
+                    dashboard[ai1] = dashboard[ai1]!! + 0.1
                 } else if (battle.leftWins == battle.rightWins){
                     dashboard[ai] = dashboard[ai]!! + 0.5
                     dashboard[ai1] = dashboard[ai1]!! + 0.5
@@ -63,22 +69,24 @@ fun main() {
             return ai
         }
     }
-    for( i in 1..10) {
-        println("learn $i")
+    val writer = PrintWriter("test-log-1.txt")
+    for( i in 1..5000) {
+        writer.println("learn $i")
         gen.learOne()
+        val top = gen.chromosomes!!.first()
+        top.iter = 0
+        top.buys(Hero("#_${top.id}"))
+        writer.println(top.listBuys + " raiting " + gen.dashboard[top] + "count chromes ${gen.chromosomes!!.size}")
         gen.dashboard.clear()
         for (ai in gen.chromosomes!!) {
             gen.addInDashboard(ai)
         }
-        val top = gen.chromosomes!!.first()
-        top.iter = 0
-        top.buys(Hero("#_${top.id}"))
-        println(top.listBuys)
-        println("res=" + gen.bestResult)
+        writer.println(gson.toJson(gen.chromosomes!!.map { it.id to it.array }))
+        writer.flush()
     }
+    writer.close()
 
-    val gson = GsonBuilder().create()
-    println(gson.toJson(gen.chromosomes!!.map { it.id to it.array }))
+
 
 }
 

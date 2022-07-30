@@ -5,9 +5,9 @@ import kotlin.random.Random
 
 abstract class GeneticAlgorithm<CHR>(
     val numberChromosomes: Int = 100,
-    val percentBest: Double = 0.05,
+    val percentBest: Double = 0.07,
     val percentMerge: Double = 0.5,
-    val percentMutation: Double = 0.4
+    val percentMutation: Double = 0.35
 ) {
     var chromosomes: List<CHR>? = null
     var bestResult: Double = Double.MIN_VALUE
@@ -29,14 +29,14 @@ abstract class GeneticAlgorithm<CHR>(
         println("best ${sorted.first()} -> $bestResult")
         val bestNumber = (numberChromosomes * percentBest).toInt()
         val best = sorted.slice(0..bestNumber)
-        val forMerge = sorted.slice(bestNumber..(bestNumber * 3))
+        //val forMerge = sorted.slice(bestNumber until sorted.size)
         val mergeNumber = (numberChromosomes * percentMerge).toInt()
         val mutationNumber = (numberChromosomes * percentMutation).toInt()
         val merges = List(mergeNumber){
-            merge(best[Random.nextInt(best.size)], forMerge[Random.nextInt(forMerge.size)])
+            merge(sorted[Random.nextInt(sorted.size)], sorted[Random.nextInt(sorted.size)])
         }
         val mutations = List(mutationNumber){
-            mutation(best[Random.nextInt(best.size)])
+            mutation(sorted[Random.nextInt(sorted.size / 2) ])
         }
         val newNumber = numberChromosomes - mergeNumber - mutationNumber - bestNumber
         val creating = List(newNumber){ create() }

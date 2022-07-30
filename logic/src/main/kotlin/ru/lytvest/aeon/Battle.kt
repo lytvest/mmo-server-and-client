@@ -40,12 +40,12 @@ class Battle(val heroLeft: Hero, val heroRight: Hero) {
 
         val course = Course()
         course.left += "hp" to heroLeft.hp
-        course.left += "maxHp" to heroLeft.maxHp
+        course.left += "maxHp" to heroLeft.maxHp.toDouble()
         course.left += "minus" to rightAttack.all() - leftBlock
         course.left += "regen" to heroLeft.hp - leftHp
 
         course.right += "hp" to heroRight.hp
-        course.right += "maxHp" to heroRight.maxHp
+        course.right += "maxHp" to heroRight.maxHp.toDouble()
         course.right += "minus" to leftAttack.all() - rightBlock
         course.right += "regen" to heroRight.hp - rightHp
 

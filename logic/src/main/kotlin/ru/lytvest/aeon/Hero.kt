@@ -7,9 +7,10 @@ import kotlin.math.min
 open class Hero() {
 
     var name: String = this::class.simpleName ?: "no_name"
-    var maxHp: Double = 100.0
-    var hp: Double = maxHp
-    var damage: Double = 15.0
+    var maxHp: Int = 100
+    var hp: Double = maxHp.toDouble()
+    var maxDamage: Int = 15
+    var damage: Double = maxDamage.toDouble()
     var armor: Double = 1.0
     var spell: Double = 0.0
     var crit: Double = 1.5
@@ -32,8 +33,8 @@ open class Hero() {
 
     init {
         fieldsGetAndSetFill()
-        shopPut("hp", 22, 10) { maxHp += it; hp += it; true }
-        shopPut("damage", 3, 7)
+        shopPut("hp", 22, 10) { maxHp += 22; hp += it; true }
+        shopPut("damage", 3, 7) { maxDamage += 3; damage += 3; true }
         shopPut("armor", 2, 4)
         shopPut("spell", 7, 15)
         shopPut("regen", 5, 11)
@@ -46,6 +47,7 @@ open class Hero() {
         }
         shopPut("crit", 0.5, 50.0)
         shopPut("inc", 0.02, 13.0)
+        shopPut("shield", calculateShield(SHIELD_STEP.toDouble()), 30.0) { shieldFun(SHIELD_STEP) }
     }
 
     open fun startBattle(enemy: Hero) {
@@ -59,7 +61,10 @@ open class Hero() {
     }
 
     open fun calcArmor(enemyAttack: Attack): Double {
-        return min(armor, enemyAttack.damage)
+        if (enemy.damage < armor){
+            return enemyAttack.damage
+        }
+        return min(armor + enemyAttack.damage * shield, enemyAttack.damage)
     }
 
     open fun minusHp(minus: Double) {
@@ -69,12 +74,14 @@ open class Hero() {
 
     open fun endCourse() {
         if(hp > 0)
-            hp = min(maxHp, hp + regen)
+            hp = min(maxHp.toDouble(), hp + regen)
+        damage += damage * inc
     }
 
     open fun endBattle() {
-        hp = maxHp
+        hp = maxHp.toDouble()
         money += 100
+        damage = maxDamage.toDouble()
     }
 
     open fun toArray(): DoubleArray {
@@ -110,6 +117,8 @@ open class Hero() {
         }
     }
 
+
+
     fun shopPut(name: String, add: Double, cost: Double, method: Method? = null) {
         shop[name] = Item(cost, add, method ?: { fieldsSet[name]!!.invoke(fieldsGet[name]!!.invoke() + add); true })
     }
@@ -138,11 +147,24 @@ open class Hero() {
         money -= cost
         return true
     }
-
-    fun methodDefault(name: String, add: Int) {
-        val value = this::class.java.getMethod(addGetForName(name)).invoke(this) as Double
-        this::class.java.getMethod(addSetForName(name), Double::class.java).invoke(this, value + add)
+    var shieldStep: Float = 0.0f
+    fun shieldFun(step: Float): Boolean {
+        if (shieldStep >= 1.0f)
+            return false
+        shieldStep = min(shieldStep + step, 1.0f)
+        shield = calculateShield(shieldStep.toDouble())
+        val item = shop["shield"] ?: return true
+        shopPut("shield", calculateShield((shieldStep + SHIELD_STEP).toDouble()), item.cost, item.method)
+        val itemOpt = shop["opt-shield"] ?: return true
+        shopPut("opt-shield", calculateShield((shieldStep + OPT_SHIELD_STEP).toDouble()), itemOpt.cost, itemOpt.method)
+        return true
     }
 
-
+    companion object {
+        const val SHIELD_STEP = 0.05f
+        const val OPT_SHIELD_STEP = 0.2f
+        fun calculateShield(x: Double): Double {
+            return ((2 - 4 * 0.7) * x * x + (4 * 0.7 - 1) * x) * 0.99;
+        }
+    }
 }
