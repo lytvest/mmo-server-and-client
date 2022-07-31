@@ -7,10 +7,7 @@ import com.badlogic.gdx.graphics.GL30
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.ScreenUtils
-import ru.lytvest.chess.scenes.LoadingScene
-import ru.lytvest.chess.scenes.Scene
-import ru.lytvest.chess.scenes.SceneManager
-import ru.lytvest.chess.scenes.WorldScene
+import ru.lytvest.chess.scenes.*
 
 fun <T : Any> T.log(msg: String) {
     Gdx.app.log(this.javaClass.simpleName, msg)
@@ -19,7 +16,7 @@ fun <T : Any> T.log(msg: String) {
 class Starter : ApplicationAdapter() {
 
     override fun create() {
-        SceneManager.push { LoadingScene { WorldScene() } }
+        SceneManager.push { LoadingScene { BattleScene() } }
         log("started")
     }
 

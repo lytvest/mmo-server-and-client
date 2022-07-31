@@ -11,6 +11,7 @@ class HeroActor(name: String = "Hero", val isLeft: Boolean = true) : Group(){
 
     init {
         this.name = name
+        addActor(image)
     }
 
     override fun sizeChanged() {

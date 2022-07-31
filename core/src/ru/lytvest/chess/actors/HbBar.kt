@@ -1,5 +1,6 @@
 package ru.lytvest.chess.actors
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
@@ -12,8 +13,8 @@ class HbBar(val isLeft: Boolean = true) : Group() {
 
     val skin get() = SceneManager.skin
 
-    val green = Image(skin, "green.png")
-    val red = Image(skin, "red.png")
+    val green = Image(skin, "white").apply { color = Color.GREEN }
+    val red = Image(skin, "white").apply { color = Color.RED }
     val hpLabel = Label("$currentHp / $maxHp", skin)
 
     init {

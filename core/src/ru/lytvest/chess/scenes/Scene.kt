@@ -1,19 +1,19 @@
 package ru.lytvest.chess.scenes
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.viewport.ExtendViewport
+import ru.lytvest.chess.log
 
 
 open class Scene {
-
-    val stage: Stage = Stage(ExtendViewport(16 * 100f,9 * 100f))
+    val SIZE = 900f
+    val viewport = ExtendViewport(SIZE, SIZE)
+    val stage: Stage = Stage(viewport)
     val skin: Skin = SceneManager.skin
 
 
@@ -22,13 +22,11 @@ open class Scene {
     fun Float.pw(): Value = Value.percentWidth( this)
     fun Float.ph(act: Actor): Value = Value.percentHeight( this, act)
     fun Float.ph(): Value = Value.percentHeight( this)
-    fun Int.mw(act: Actor): Value = Value.percentWidth( this / 120.0f, act)
-    fun Int.mw(): Value = Value.percentWidth( this / 120.0f)
-    fun Int.mh(act: Actor): Value = Value.percentHeight( this / 120.0f, act)
-    fun Int.mh(): Value = Value.percentHeight( this / 120.0f)
+    fun Int.w() = width() / 120f * this
+    fun Int.h() = height() / 120f * this
 
-    fun width() = Gdx.graphics.width.toFloat()
-    fun height() = Gdx.graphics.height.toFloat()
+    fun width() = viewport.worldWidth
+    fun height() = viewport.worldHeight
 
 
     open fun show() {
@@ -42,6 +40,7 @@ open class Scene {
 
     open fun resize(width: Int, height: Int) {
         stage.viewport.update(width, height, true);
+        log("width: ${width()} height: ${height()}")
     }
 
     fun <T : Actor> add(actor:() -> T) : T{
