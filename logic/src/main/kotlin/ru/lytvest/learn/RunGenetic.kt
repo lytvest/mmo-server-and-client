@@ -1,21 +1,16 @@
-package ru.lytvest.aeon
+package ru.lytvest.learn
 
 import com.google.gson.GsonBuilder
-import ru.lytvest.learn.GeneticAlgorithm
-import ru.lytvest.learn.ListBuysAI
-import java.io.File
+import ru.lytvest.aeon.Battle
+import ru.lytvest.aeon.Hero
 import java.io.PrintWriter
 import kotlin.random.Random
-
-class Warrior : Hero() {
-    private var open: Float = 1f
-}
 
 
 fun main() {
     val gson = GsonBuilder().create()
     val gen = object : GeneticAlgorithm<ListBuysAI>() {
-        val COUNT = Hero().shop.size
+        val COUNT = Hero.names.size * 2
         val dashboard = mutableMapOf<ListBuysAI, Double>()
 
         fun addInDashboard(ai: ListBuysAI){

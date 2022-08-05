@@ -2,6 +2,7 @@ package ru.lytvest.aeon
 
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.random.Random
 
 
 open class Hero() {
@@ -14,7 +15,7 @@ open class Hero() {
     var armor: Double = 1.0
     var spell: Double = 0.0
     var crit: Double = 1.5
-    var critChange: Double = 0.0
+    var critChance: Double = 0.0
     var inc: Double = 0.0
     var regen: Double = 1.0
     var shield: Double = 0.0
@@ -24,30 +25,49 @@ open class Hero() {
     lateinit var fieldsSet: LinkedHashMap<String, (Double) -> Unit>
 
     var money: Double = 100.0
+    var random = Random(32)
 
     val shop = linkedMapOf<String, Item>()
 
     constructor(name: String) : this() {
         this.name = name
     }
+    private val criticalFun: Method = {
+        if (critChance < 1.0) {
+            critChance = min(critChance + it, 1.0)
+            true
+        } else
+            false
+    }
+    private val hpFun: Method = { maxHp += it.toInt(); hp += it.toInt(); true }
+    private val damageFun: Method = { maxDamage += it.toInt(); damage += it.toInt(); true }
 
     init {
         fieldsGetAndSetFill()
-        shopPut("hp", 22, 10) { maxHp += 22; hp += it; true }
-        shopPut("damage", 3, 7) { maxDamage += 3; damage += 3; true }
+        shopPut("hp", 22, 10, hpFun)
+        shopPut("damage", 3, 7, damageFun)
         shopPut("armor", 2, 4)
         shopPut("spell", 7, 15)
         shopPut("regen", 5, 11)
-        shopPut("critChange", 0.05, 15.0) {
-            if (critChange >= 1.0) {
-                false
-            } else {
-                critChange = min(critChange + it, 1.0); true
-            }
-        }
+        shopPut("critChance", 0.05, 15.0, criticalFun)
         shopPut("crit", 0.5, 50.0)
         shopPut("inc", 0.02, 13.0)
-        shopPut("shield", calculateShield(SHIELD_STEP.toDouble()), 30.0) { shieldFun(SHIELD_STEP) }
+        shopPut("shield", currentShieldAdd(SHIELD_STEP), 30.0) { shieldFun(SHIELD_STEP) }
+    }
+
+
+
+    open fun initShopOpt() {
+        shopPut("opt-hp", 220, 87, hpFun)
+        shopPut("opt-damage", 60, 120, damageFun)
+        shopPut("opt-spell", 46, 90)
+        shopPut("opt-armor", 80, 130)
+        shopPut("opt-regen", 62, 115)
+        shopPut("opt-inc", 0.2, 120.0)
+        shopPut("opt-critChance", 0.4, 104.0)
+        shopPut("opt-crit", 1.2, 105.0)
+        shopPut("opt-shield", currentShieldAdd(OPT_SHIELD_STEP), 120.0) { shieldFun(OPT_SHIELD_STEP) }
+
     }
 
     open fun startBattle(enemy: Hero) {
@@ -57,10 +77,13 @@ open class Hero() {
     open fun startCourse() {}
 
     open fun calcAttack(): Attack {
+        if (random.nextDouble() <= critChance){
+            return Attack(damage + damage * crit, spell)
+        }
         return Attack(damage, spell)
     }
 
-    open fun calcArmor(enemyAttack: Attack): Double {
+    open fun calcBlockedDamage(enemyAttack: Attack): Double {
         if (enemy.damage < armor){
             return enemyAttack.damage
         }
@@ -75,6 +98,7 @@ open class Hero() {
     open fun endCourse() {
         if(hp > 0)
             hp = min(maxHp.toDouble(), hp + regen)
+
         damage += damage * inc
     }
 
@@ -109,6 +133,7 @@ open class Hero() {
         for (elem in this::class.java.methods) {
             val type = elem.genericReturnType.typeName
             if (type == "double" && elem.name.startsWith("get")) {
+//                println("add get ${elem.name}")
                 val nameMethod = removeGetFromName(elem.name)
                 fieldsGet[nameMethod] = { elem.invoke(this) as Double }
                 val setter = this::class.java.getMethod(addSetForName(nameMethod), Double::class.java)
@@ -154,10 +179,13 @@ open class Hero() {
         shieldStep = min(shieldStep + step, 1.0f)
         shield = calculateShield(shieldStep.toDouble())
         val item = shop["shield"] ?: return true
-        shopPut("shield", calculateShield((shieldStep + SHIELD_STEP).toDouble()), item.cost, item.method)
+        shopPut("shield", currentShieldAdd(SHIELD_STEP), item.cost, item.method)
         val itemOpt = shop["opt-shield"] ?: return true
-        shopPut("opt-shield", calculateShield((shieldStep + OPT_SHIELD_STEP).toDouble()), itemOpt.cost, itemOpt.method)
+        shopPut("opt-shield", currentShieldAdd(OPT_SHIELD_STEP), itemOpt.cost, itemOpt.method)
         return true
+    }
+    fun currentShieldAdd(step: Float): Double {
+        return calculateShield(shieldStep.toDouble() + step) - calculateShield(shieldStep.toDouble())
     }
 
     companion object {
@@ -166,5 +194,20 @@ open class Hero() {
         fun calculateShield(x: Double): Double {
             return ((2 - 4 * 0.7) * x * x + (4 * 0.7 - 1) * x) * 0.99;
         }
+
+        val names: MutableMap<String, String> = mutableMapOf(
+                "hp" to "Здоровье",
+                "damage" to "Урон оружием",
+                "spell" to "Урон магией",
+                "critChance" to "Шанс критической атаки",
+                "crit" to "Критический урон",
+                "regen" to "Регенерация",
+                "inc" to "Ярость",
+                "armor" to "Броня",
+                "shield" to "Щит",
+                "money" to "Деньги",
+        )
+        val withPercent: MutableSet<String> = mutableSetOf("crit", "critChance", "inc", "shield")
+
     }
 }

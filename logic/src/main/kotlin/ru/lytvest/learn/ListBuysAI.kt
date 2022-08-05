@@ -1,10 +1,11 @@
 package ru.lytvest.learn
 
+import ru.lytvest.aeon.Hero
 import ru.lytvest.aeon.Shop
 import kotlin.random.Random
 
 
-class ListBuysAI(val countFields: Int) : Shop() {
+class ListBuysAI(val countFields: Int = Hero.names.size * 2) : Shop() {
     val id = currId++
     var array = Array<Int>(SIZE){ Random.nextInt(countFields) }
     var iter = 0
@@ -12,8 +13,8 @@ class ListBuysAI(val countFields: Int) : Shop() {
     override fun autoBuy(list: List<String>): String {
         if (iter >= array.size)
             iter = 0
-
-        return list[array[iter++]]
+        val index = array[iter++]
+        return if (index in list.indices) list[index] else ""
     }
 
     override fun toString(): String {

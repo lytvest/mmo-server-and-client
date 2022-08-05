@@ -15,6 +15,10 @@ class Battle(val heroLeft: Hero, val heroRight: Hero) {
         numberGame += 1
         heroLeft.startBattle(heroRight)
         heroRight.startBattle(heroLeft)
+        if (numberGame == 2){
+            heroLeft.initShopOpt()
+            heroRight.initShopOpt()
+        }
     }
 
     fun nextCourse(): Course {
@@ -26,8 +30,8 @@ class Battle(val heroLeft: Hero, val heroRight: Hero) {
         val leftAttack = heroLeft.calcAttack()
         val rightAttack = heroRight.calcAttack()
 
-        val leftBlock = heroLeft.calcArmor(rightAttack)
-        val rightBlock = heroRight.calcArmor(leftAttack)
+        val leftBlock = heroLeft.calcBlockedDamage(rightAttack)
+        val rightBlock = heroRight.calcBlockedDamage(leftAttack)
 
         heroLeft.minusHp(rightAttack.all() - leftBlock)
         heroRight.minusHp(leftAttack.all() - rightBlock)
@@ -87,7 +91,7 @@ class Battle(val heroLeft: Hero, val heroRight: Hero) {
     fun nextGame(ai: Shop, ai1: Shop) {
         ai.clear()
         ai1.clear()
-        while(numberGame < 10 && !isEndGame()){
+        while (numberGame < 10 && !isEndGame()) {
             ai.buys(heroLeft)
             ai1.buys(heroRight)
             nextBattle()
@@ -98,7 +102,7 @@ class Battle(val heroLeft: Hero, val heroRight: Hero) {
 
 fun main() {
     println("............   Console Aeon   ..............")
-    val battle = Battle(Warrior(), Hero())
+    val battle = Battle(Fatty(), Hero())
     battle.heroLeft.name = "1 Герой"
     battle.heroRight.name = "2 Cупер герой"
     val ai = ListBuysAI(battle.heroRight.shop.size)
@@ -116,22 +120,32 @@ fun main() {
     }
 }
 
+fun String.removeOpt(): String {
+    return if (this.startsWith("opt-")) this.substring(4) else this
+}
+
+fun printChr(chr: String, value: Double): String {
+    if(Hero.withPercent.contains(chr.removeOpt()))
+        return "${(value*100).toInt()}%"
+    return value.toInt().toString()
+}
+
 private fun consoleShop(hero: Hero) {
     val shop = hero.shop.toList()
     val input = Scanner(System.`in`);
     do {
         for (i in 1..shop.size) {
             val (name, item) = shop[i - 1]
-            println("$i] $name +${item.add}   ${item.cost}\$")
+            println("$i] ${Hero.names[name.removeOpt()]} +${printChr(name, item.add)}   ${item.cost.toInt()}\$")
         }
         print("Введите номер покупки или 0: ")
         val num = input.nextInt()
         if (num in 1..shop.size) {
             val (name, item) = shop[num - 1]
             if (hero.buy(name))
-                println("success buy +${item.add} $name  - ${item.cost}\$")
+                println("Куплено +${printChr(name, item.add)} ${Hero.names[name.removeOpt()]}  - ${item.cost.toInt()}\$")
             else
-                println("fail buy $name")
+                println("нельзя купить ${Hero.names[name.removeOpt()]}")
             printHero(hero)
         }
     } while (num != 0)
@@ -141,7 +155,7 @@ private fun printHero(hero: Hero) {
     print("${hero.name}:\n| ")
     val fields = hero.toMap()
     for ((name, count) in fields) {
-        print("$name : $count | ")
+        print("${Hero.names[name]} : ${printChr(name, count)} | ")
     }
     println()
 }
