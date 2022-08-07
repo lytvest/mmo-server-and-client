@@ -1,6 +1,4 @@
-package ru.lytvest.aeon
-
-import kotlin.math.roundToInt
+package ru.lytvest.aeon.heroes
 
 class Fatty : Hero() {
 

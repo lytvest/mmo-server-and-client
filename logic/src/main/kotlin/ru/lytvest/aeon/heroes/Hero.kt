@@ -1,5 +1,9 @@
-package ru.lytvest.aeon
+package ru.lytvest.aeon.heroes
 
+import ru.lytvest.aeon.Attack
+import ru.lytvest.aeon.Item
+import ru.lytvest.aeon.Method
+import ru.lytvest.aeon.removeOpt
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
@@ -7,7 +11,7 @@ import kotlin.random.Random
 
 open class Hero() {
 
-    var name: String = this::class.simpleName ?: "no_name"
+    var username: String = this::class.simpleName ?: "no_name"
     var maxHp: Int = 100
     var hp: Double = maxHp.toDouble()
     var maxDamage: Int = 15
@@ -30,7 +34,7 @@ open class Hero() {
     val shop = linkedMapOf<String, Item>()
 
     constructor(name: String) : this() {
-        this.name = name
+        this.username = name
     }
     private val criticalFun: Method = {
         if (critChance < 1.0) {
@@ -145,7 +149,7 @@ open class Hero() {
 
 
     fun shopPut(name: String, add: Double, cost: Double, method: Method? = null) {
-        shop[name] = Item(cost, add, method ?: { fieldsSet[name]!!.invoke(fieldsGet[name]!!.invoke() + add); true })
+        shop[name] = Item(cost, add, method ?: { fieldsSet[name.removeOpt()]!!.invoke(fieldsGet[name.removeOpt()]!!.invoke() + add); true })
     }
 
     fun shopPut(name: String, add: Int, cost: Int, method: Method? = null) {

@@ -1,14 +1,23 @@
 package ru.lytvest.aeon
 
-import ru.lytvest.learn.ListBuysAI
+import ru.lytvest.aeon.heroes.Fatty
+import ru.lytvest.aeon.heroes.Hero
+import ru.lytvest.learn.FixedBuysPlayer
+import ru.lytvest.learn.PlayerWithAutoBuys
 import java.util.*
 
-class Battle(val heroLeft: Hero, val heroRight: Hero) {
-
+class Battle(heroLeftClass: String, heroRightClass: String, userNameLeft: String = "no_name", userNameRight: String = "no_name",) {
+    val heroLeft: Hero = Class.forName("ru.lytvest.aeon.heroes.$heroLeftClass").newInstance() as Hero
+    val heroRight: Hero = Class.forName("ru.lytvest.aeon.heroes.$heroRightClass").newInstance() as Hero
     var numberCourse = 0
     var numberGame = 0
     var leftWins = 0
     var rightWins = 0
+
+    init {
+        heroLeft.username = userNameLeft
+        heroRight.username = userNameRight
+    }
 
     fun start() {
         numberCourse = 0
@@ -43,16 +52,17 @@ class Battle(val heroLeft: Hero, val heroRight: Hero) {
         heroLeft.endCourse()
 
         val course = Course()
-        course.left += "hp" to heroLeft.hp
-        course.left += "maxHp" to heroLeft.maxHp.toDouble()
-        course.left += "minus" to rightAttack.all() - leftBlock
-        course.left += "regen" to heroLeft.hp - leftHp
+        course.you += "hp" to heroLeft.hp
+        course.you += "maxHp" to heroLeft.maxHp.toDouble()
+        course.you += "minus" to rightAttack.all() - leftBlock
+        course.you += "regen" to heroLeft.hp - leftHp
 
-        course.right += "hp" to heroRight.hp
-        course.right += "maxHp" to heroRight.maxHp.toDouble()
-        course.right += "minus" to leftAttack.all() - rightBlock
-        course.right += "regen" to heroRight.hp - rightHp
+        course.enemy += "hp" to heroRight.hp
+        course.enemy += "maxHp" to heroRight.maxHp.toDouble()
+        course.enemy += "minus" to leftAttack.all() - rightBlock
+        course.enemy += "regen" to heroRight.hp - rightHp
 
+        println(course)
         return course
     }
 
@@ -88,13 +98,17 @@ class Battle(val heroLeft: Hero, val heroRight: Hero) {
         return leftWins >= 5 || rightWins >= 5
     }
 
-    fun nextGame(ai: Shop, ai1: Shop) {
-        ai.clear()
-        ai1.clear()
+    fun nextGame(ai: Player, ai1: Player) {
+        var courses: List<Course> = listOf()
+        ai.preparation()
+        ai1.preparation()
         while (numberGame < 10 && !isEndGame()) {
-            ai.buys(heroLeft)
-            ai1.buys(heroRight)
-            nextBattle()
+
+            ai.buys(heroLeft, courses, numberGame)
+            println((ai as PlayerWithAutoBuys).listBuys)
+            ai1.buys(heroRight, courses.map { it.flip() }, numberGame)
+            println((ai1 as PlayerWithAutoBuys).listBuys)
+            courses = nextBattle()
         }
         //println("game ${heroLeft.name} vs ${heroRight.name}    [${leftWins} - ${rightWins}]")
     }
@@ -102,15 +116,16 @@ class Battle(val heroLeft: Hero, val heroRight: Hero) {
 
 fun main() {
     println("............   Console Aeon   ..............")
-    val battle = Battle(Fatty(), Hero())
-    battle.heroLeft.name = "1 Герой"
-    battle.heroRight.name = "2 Cупер герой"
-    val ai = ListBuysAI(battle.heroRight.shop.size)
+    val battle = Battle("Fatty", "Hero",  "1 Герой", "2 Cупер герой")
+
+    val ai = FixedBuysPlayer()
+    ai.preparation()
+
     while (!battle.isEndGame()) {
         printHero(battle.heroLeft)
         consoleShop(battle.heroLeft)
         printHero(battle.heroRight)
-        ai.buys(battle.heroRight)
+        ai.buys(battle.heroRight, listOf(), battle.numberGame)
         println("ai buy " + ai.listBuys)
         battle.nextBattle().forEach {
             println(it)
@@ -152,7 +167,7 @@ private fun consoleShop(hero: Hero) {
 }
 
 private fun printHero(hero: Hero) {
-    print("${hero.name}:\n| ")
+    print("${hero.username}:\n| ")
     val fields = hero.toMap()
     for ((name, count) in fields) {
         print("${Hero.names[name]} : ${printChr(name, count)} | ")
