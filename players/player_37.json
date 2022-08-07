@@ -1,0 +1,13 @@
+{
+  "type": "ru.lytvest.learn.RandomPlayer",
+  "info": {
+    "sid": 1814298910,
+    "errors": 3,
+    "listBuys": [
+      "opt-spell",
+      "critChance"
+    ],
+    "id": 37,
+    "heroClass": "Hero"
+  }
+}

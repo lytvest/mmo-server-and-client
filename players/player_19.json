@@ -1,0 +1,15 @@
+{
+  "type": "ru.lytvest.learn.RandomPlayer",
+  "info": {
+    "sid": 45418682,
+    "errors": 3,
+    "listBuys": [
+      "opt-hp",
+      "regen",
+      "regen",
+      "inc"
+    ],
+    "id": 19,
+    "heroClass": "Hero"
+  }
+}

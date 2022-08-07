@@ -1,0 +1,16 @@
+{
+  "type": "ru.lytvest.learn.RandomPlayer",
+  "info": {
+    "sid": 409492639,
+    "errors": 3,
+    "listBuys": [
+      "shield",
+      "hp",
+      "shield",
+      "armor",
+      "shield"
+    ],
+    "id": 24,
+    "heroClass": "Hero"
+  }
+}

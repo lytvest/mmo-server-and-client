@@ -1,0 +1,16 @@
+{
+  "type": "ru.lytvest.learn.RandomPlayer",
+  "info": {
+    "sid": 822135749,
+    "errors": 3,
+    "listBuys": [
+      "damage",
+      "opt-crit",
+      "shield",
+      "spell",
+      "regen"
+    ],
+    "id": 49,
+    "heroClass": "Hero"
+  }
+}
