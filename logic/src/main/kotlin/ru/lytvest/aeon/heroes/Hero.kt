@@ -74,11 +74,11 @@ open class Hero() {
 
     }
 
-    open fun startBattle(enemy: Hero) {
+    open fun startBattle(enemy: Hero, numberBattle: Int) {
         this.enemy = enemy
     }
 
-    open fun startCourse() {}
+    open fun startCourse(numberCourse: Int) {}
 
     open fun calcAttack(): Attack {
         if (random.nextDouble() <= critChance){
@@ -101,8 +101,11 @@ open class Hero() {
 
     open fun endCourse() {
         if(hp > 0)
-            hp = min(maxHp.toDouble(), hp + regen)
+            regeneration()
+        incomingDamage()
+    }
 
+    open fun incomingDamage() {
         damage += damage * inc
     }
 
@@ -110,6 +113,10 @@ open class Hero() {
         hp = maxHp.toDouble()
         money += 100
         damage = maxDamage.toDouble()
+    }
+
+    open fun regeneration() {
+        hp = min(maxHp.toDouble(), hp + regen)
     }
 
     open fun toArray(): DoubleArray {
@@ -165,7 +172,7 @@ open class Hero() {
     }
 
 
-    fun buy(name: String): Boolean {
+    open fun buy(name: String): Boolean {
         val (cost, add, method) = shop[name] ?: return false
         if (money < cost)
             return false
@@ -174,8 +181,13 @@ open class Hero() {
             return false
 
         money -= cost
+        successBuy(name, cost, add)
         return true
     }
+
+    open fun successBuy(name: String, cost: Double, add: Double) {}
+
+
     var shieldStep: Float = 0.0f
     fun shieldFun(step: Float): Boolean {
         if (shieldStep >= 1.0f)
@@ -215,3 +227,5 @@ open class Hero() {
 
     }
 }
+
+fun String.isOpt(): Boolean = this.startsWith("opt-")
