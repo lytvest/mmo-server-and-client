@@ -22,8 +22,8 @@ class Battle(heroLeftClass: String, heroRightClass: String, userNameLeft: String
     fun start() {
         numberCourse = 0
         numberGame += 1
-        heroLeft.startBattle(heroRight)
-        heroRight.startBattle(heroLeft)
+        heroLeft.startBattle(heroRight, numberGame)
+        heroRight.startBattle(heroLeft, numberGame)
         if (numberGame == 2){
             heroLeft.initShopOpt()
             heroRight.initShopOpt()
@@ -45,8 +45,8 @@ class Battle(heroLeftClass: String, heroRightClass: String, userNameLeft: String
     fun nextCourse(): Course {
         numberCourse += 1
 
-        heroLeft.startCourse()
-        heroRight.startCourse()
+        heroLeft.startCourse(numberCourse)
+        heroRight.startCourse(numberCourse)
 
         val leftAttack = heroLeft.calcAttack()
         val rightAttack = heroRight.calcAttack()
