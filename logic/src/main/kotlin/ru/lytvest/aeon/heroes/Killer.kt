@@ -1,5 +1,7 @@
 package ru.lytvest.aeon.heroes
 
+import ru.lytvest.aeon.Attack
+
 class Killer : Hero() {
 
     var added: Float = 0f
@@ -13,6 +15,10 @@ class Killer : Hero() {
         }
     }
 
-    // 15% проходят сквось броню
-
+    override fun calcAttack(): Attack {
+        return super.calcAttack().apply {
+            spellFactor += 0.15
+            factor -= 0.15
+        }
+    }
 }

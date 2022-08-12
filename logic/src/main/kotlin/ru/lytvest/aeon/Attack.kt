@@ -1,12 +1,12 @@
 package ru.lytvest.aeon
 
-data class Attack(val damage: Double, val spell: Double, val factor: Double, val isCritical: Boolean, val criticalFactor: Double) {
+data class Attack(var damage: Double, var spell: Double, var factor: Double, var isCritical: Boolean, var criticalFactor: Double, var spellFactor: Double = 1.0) {
 
-    fun all(): Double = physical() + spell
+    fun all(): Double = physical() + spell * spellFactor
 
     fun physical() = if (isCritical)
-        (damage * factor) * (criticalFactor)
+        damage * factor * criticalFactor
     else
-        (damage * factor)
+        damage * factor
 
 }

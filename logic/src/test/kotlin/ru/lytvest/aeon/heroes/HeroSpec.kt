@@ -17,8 +17,8 @@ class HeroSpec {
     fun initHeroes(){
         me = Hero.byClass("Hero", "me")
         enemy = Hero.byClass("Hero", "enemy")
-        me.startBattle(enemy)
-        enemy.startBattle(me)
+        me.startBattle(enemy, 1)
+        enemy.startBattle(me, 1)
     }
     
     @Test
@@ -63,8 +63,8 @@ class HeroSpec {
     @CsvSource(
         "0, 0, 0",
         "3, 0, 3",
-        "0, 0.5, 5",
-        "2, 0.5, 7",
+        "0, 0.5, 10",
+        "2, 0.5, 12",
         "10, 0, 20"
     )
     fun testCalcBlockWithCritical(armor: Double, shield: Double, block: Double) {

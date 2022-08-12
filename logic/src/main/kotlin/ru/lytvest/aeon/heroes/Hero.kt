@@ -88,7 +88,7 @@ open class Hero() {
         if (enemyAttack.damage <= armor){
             return enemyAttack.physical()
         }
-        return min(armor + enemyAttack.physical() * shield, enemyAttack.damage)
+        return min(armor + enemyAttack.physical() * shield, enemyAttack.physical())
     }
 
     open fun minusHp(minus: Double) {
@@ -223,7 +223,9 @@ open class Hero() {
         val withPercent: MutableSet<String> = mutableSetOf("crit", "critChance", "inc", "shield")
 
         fun byClass(nameClass: String, username: String = "no_name"): Hero {
-            return Class.forName("ru.lytvest.aeon.heroes.$nameClass").newInstance() as Hero
+            val hero = Class.forName("ru.lytvest.aeon.heroes.$nameClass").newInstance() as Hero
+            hero.username = username
+            return hero
         }
 
     }
