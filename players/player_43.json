@@ -1,9 +1,10 @@
 {
   "type": "ru.lytvest.learn.RandomPlayer",
   "info": {
-    "sid": 1967672995,
+    "sid": -2043427925,
     "errors": 3,
     "listBuys": [
+      "opt-shield",
       "armor"
     ],
     "id": 43,

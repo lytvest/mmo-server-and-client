@@ -1,11 +1,10 @@
 {
   "type": "ru.lytvest.learn.RandomPlayer",
   "info": {
-    "sid": -113079807,
+    "sid": 780138002,
     "errors": 3,
     "listBuys": [
-      "hp",
-      "crit",
+      "regen",
       "crit"
     ],
     "id": 15,

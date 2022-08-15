@@ -29,7 +29,7 @@ fun main() {
     val db = FilesPlayerDB()
     TeacherWithScore(db).apply {
         for (i in 1..100) {
-            println("#$i :" + calcScore(db.findById(1L)!!))
+            print("#$i :" + (calcScore(db.findById(i.toLong())!!)* 10).toInt() / 10.0)
         }
     }
     for(j in 1..1000) {
@@ -43,9 +43,20 @@ fun main() {
 
         TeacherWithScore(db).apply {
             for (i in 1..100) {
-                println("#$i :" + calcScore(db.findById(1L)!!))
+                print("#$i :" + (calcScore(db.findById(i.toLong())!!)* 10).toInt() / 10.0)
             }
         }
+        TeacherWithScore(db).apply {
+            players.clear()
+            for(i in 1..100){
+                players.add(RandomPlayer())
+            }
+            println("random scores:")
+            for (i in 1..100) {
+                print("#$i :" + (calcScore(db.findById(i.toLong())!!)* 10).toInt() / 10.0)
+            }
+        }
+
     }
 
 }

@@ -6,19 +6,19 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import ru.lytvest.aeon.Attack
+import ru.lytvest.aeon.Battle
 
 
 class HeroSpec {
 
-    lateinit var me: Hero
-    lateinit var enemy: Hero
+    lateinit var battle: Battle
+    val me: Hero get() = battle.heroLeft
+    val enemy: Hero get() = battle.heroRight
     
     @BeforeEach
     fun initHeroes(){
-        me = Hero.byClass("Hero", "me")
-        enemy = Hero.byClass("Hero", "enemy")
-        me.startBattle(enemy, 1)
-        enemy.startBattle(me, 1)
+        battle = Battle("Hero", "Hero", "me", "enemy")
+        battle.start()
     }
     
     @Test
@@ -74,4 +74,25 @@ class HeroSpec {
         assertEquals(30.0, Attack(10.0,10.0, 1.0, true, 2.0).all())
         assertEquals(block, me.calcBlockedDamage(Attack(10.0,10.0, 1.0, true, 2.0)))
     }
+
+    @ParameterizedTest
+    @CsvSource(
+        "2, 2, 2",
+    )
+    fun testRegen(curr: Double, actual: Double, actual2: Double){
+
+        me.regen = curr
+        enemy.regen = curr
+        val co1 = battle.nextCourse()
+
+        assertEquals(actual, co1.you["regen"])
+        assertEquals(actual, co1.enemy["regen"])
+
+        val co2 = battle.nextCourse()
+        assertEquals(actual2, co2.you["regen"])
+        assertEquals(actual2, co2.enemy["regen"])
+
+    }
+
+
 }

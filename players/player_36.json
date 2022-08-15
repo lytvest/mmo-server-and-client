@@ -1,10 +1,13 @@
 {
   "type": "ru.lytvest.learn.RandomPlayer",
   "info": {
-    "sid": -1661180264,
+    "sid": 617782474,
     "errors": 3,
     "listBuys": [
-      "armor"
+      "crit",
+      "opt-critChance",
+      "inc",
+      "damage"
     ],
     "id": 36,
     "heroClass": "Hero"

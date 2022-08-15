@@ -5,6 +5,7 @@ import ru.lytvest.aeon.heroes.Hero
 import ru.lytvest.learn.FixedBuysPlayer
 import ru.lytvest.learn.PlayerWithAutoBuys
 import java.util.*
+import kotlin.random.Random
 
 class Battle(heroLeftClass: String, heroRightClass: String, userNameLeft: String = "no_name", userNameRight: String = "no_name",) {
     val heroLeft: Hero = Hero.byClass(heroLeftClass, userNameLeft)
@@ -30,9 +31,14 @@ class Battle(heroLeftClass: String, heroRightClass: String, userNameLeft: String
         }
     }
 
+    fun setSeedRandom(seedL: Long, seedR: Long = seedL + 14){
+        heroLeft.random = Random(seedL)
+        heroRight.random = Random(seedR)
+    }
+
     fun startCourse(): Course {
         val course = Course()
-        println("start cource hp ${heroLeft.hp}")
+//        println("start cource hp ${heroLeft.hp}")
         course.you += "hp" to heroLeft.hp
         course.you += "maxHp" to heroLeft.maxHp.toDouble()
 
@@ -66,8 +72,8 @@ class Battle(heroLeftClass: String, heroRightClass: String, userNameLeft: String
 //        println("curr hp $leftHp -> $rightHp")
 
         heroLeft.endCourse()
-        heroLeft.endCourse()
-//        println("curr hp old $leftHp -> $rightHp")
+        heroRight.endCourse()
+//        println("curr hp old ${heroLeft.hp} -> ${heroRight.hp}")
 
         val course = Course()
         course.you += "hp" to heroLeft.hp
@@ -125,18 +131,18 @@ class Battle(heroLeftClass: String, heroRightClass: String, userNameLeft: String
         while (numberGame < 10 && !isEndGame()) {
 
             ai.buys(heroLeft, courses, numberGame)
-            print("left buys:")
-            println((ai as PlayerWithAutoBuys).listBuys)
+//            print("left buys:")
+//            println((ai as PlayerWithAutoBuys).listBuys)
             ai1.buys(heroRight, courses.map { it.flip() }, numberGame)
-            print("right buys:")
-            println((ai1 as PlayerWithAutoBuys).listBuys)
-            println("hero left ${heroLeft.toMap()}")
-            println("hero right ${heroRight.toMap()}")
+//            print("right buys:")
+//            println((ai1 as PlayerWithAutoBuys).listBuys)
+//            println("hero left ${heroLeft.toMap()}")
+//            println("hero right ${heroRight.toMap()}")
             courses = nextBattle()
-            for(course in courses){
-                println(course)
-            }
-            println("-------------------------- end battle ---------------------------")
+//            for(course in courses){
+//                println(course)
+//            }
+//            println("-------------------------- end battle ---------------------------")
         }
 
         //println("game ${heroLeft.name} vs ${heroRight.name}    [${leftWins} - ${rightWins}]")
