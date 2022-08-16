@@ -45,6 +45,7 @@ fun main() {
             for (i in 1..100) {
                 print("#$i :" + (calcScore(db.findById(i.toLong())!!)* 10).toInt() / 10.0)
             }
+            println()
         }
         TeacherWithScore(db).apply {
             players.clear()
@@ -53,8 +54,9 @@ fun main() {
             }
             println("random scores:")
             for (i in 1..100) {
-                print("#$i :" + (calcScore(db.findById(i.toLong())!!)* 10).toInt() / 10.0)
+                print(" #$i :" + (calcScore(db.findById(i.toLong())!!)* 10).toInt() / 10.0)
             }
+            println()
         }
 
     }

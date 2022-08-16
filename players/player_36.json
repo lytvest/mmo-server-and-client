@@ -4,10 +4,10 @@
     "sid": 617782474,
     "errors": 3,
     "listBuys": [
-      "crit",
-      "opt-critChance",
+      "spell",
       "inc",
-      "damage"
+      "regen",
+      "critChance"
     ],
     "id": 36,
     "heroClass": "Hero"

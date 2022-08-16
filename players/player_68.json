@@ -4,8 +4,13 @@
     "sid": 361738228,
     "errors": 3,
     "listBuys": [
+      "spell",
       "critChance",
-      "opt-hp"
+      "inc",
+      "shield",
+      "hp",
+      "regen",
+      "armor"
     ],
     "id": 68,
     "heroClass": "Hero"

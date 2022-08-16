@@ -4,12 +4,9 @@
     "sid": -1539728681,
     "errors": 3,
     "listBuys": [
-      "critChance",
-      "inc",
-      "shield",
-      "critChance",
-      "spell",
-      "critChance"
+      "regen",
+      "crit",
+      "armor"
     ],
     "id": 96,
     "heroClass": "Hero"

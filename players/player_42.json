@@ -4,8 +4,9 @@
     "sid": 407309024,
     "errors": 3,
     "listBuys": [
-      "opt-damage",
-      "regen"
+      "hp",
+      "hp",
+      "damage"
     ],
     "id": 42,
     "heroClass": "Hero"

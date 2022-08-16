@@ -2,6 +2,7 @@ package ru.lytvest.aeon
 
 import ru.lytvest.aeon.heroes.Fatty
 import ru.lytvest.aeon.heroes.Hero
+import ru.lytvest.learn.FilesPlayerDB
 import ru.lytvest.learn.FixedBuysPlayer
 import ru.lytvest.learn.PlayerWithAutoBuys
 import java.util.*
@@ -151,9 +152,10 @@ class Battle(heroLeftClass: String, heroRightClass: String, userNameLeft: String
 
 fun main() {
     println("............   Console Aeon   ..............")
-    val battle = Battle("Fatty", "Hero",  "1 Герой", "2 Cупер герой")
+    val ai = FilesPlayerDB().findById(4) as PlayerWithAutoBuys
+    val battle = Battle("Fatty", ai.heroClass,  "1 Герой", "2 Cупер герой")
 
-    val ai = FixedBuysPlayer()
+
     ai.preparation()
 
     while (!battle.isEndGame()) {
@@ -164,6 +166,7 @@ fun main() {
         println("ai buy " + ai.listBuys)
         battle.nextBattle().forEach {
             println(it)
+            Thread.sleep(1000)
         }
         println("всего ударов:" + battle.numberCourse)
         println("Игра номер : ${battle.numberGame}")
