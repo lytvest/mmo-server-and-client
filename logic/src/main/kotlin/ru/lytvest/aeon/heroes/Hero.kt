@@ -14,8 +14,8 @@ open class Hero() {
     var username: String = this::class.simpleName ?: "no_name"
     var maxHp: Int = 100
     var hp: Double = maxHp.toDouble()
-    var maxDamage: Int = 15
-    var damage: Double = maxDamage.toDouble()
+    var damage: Double = 15.0
+    var damageFactor: Float = 1f
     var armor: Double = 1.0
     var spell: Double = 0.0
     var crit: Double = 1.5
@@ -44,12 +44,11 @@ open class Hero() {
             false
     }
     private val hpFun: Method = { maxHp += it.toInt(); hp += it.toInt(); true }
-    private val damageFun: Method = { maxDamage += it.toInt(); damage += it.toInt(); true }
 
     init {
         fieldsGetAndSetFill()
         shopPut("hp", 22, 10, hpFun)
-        shopPut("damage", 3, 7, damageFun)
+        shopPut("damage", 3, 7)
         shopPut("armor", 2, 4)
         shopPut("spell", 7, 15)
         shopPut("regen", 5, 11)
@@ -63,7 +62,7 @@ open class Hero() {
 
     open fun initShopOpt() {
         shopPut("opt-hp", 220, 87, hpFun)
-        shopPut("opt-damage", 60, 120, damageFun)
+        shopPut("opt-damage", 60, 120)
         shopPut("opt-spell", 46, 90)
         shopPut("opt-armor", 80, 130)
         shopPut("opt-regen", 62, 115)
@@ -81,17 +80,15 @@ open class Hero() {
     open fun startCourse(numberCourse: Int) {}
 
     open fun calcAttack(): Attack {
-        if (random.nextDouble() <= critChance){
-            return Attack(damage + damage * crit, spell)
-        }
-        return Attack(damage, spell)
+
+        return Attack(damage, spell, damageFactor.toDouble(), random.nextDouble() <= critChance, crit)
     }
 
     open fun calcBlockedDamage(enemyAttack: Attack): Double {
-        if (enemy.damage < armor){
-            return enemyAttack.damage
+        if (enemyAttack.damage <= armor){
+            return enemyAttack.physical()
         }
-        return min(armor + enemyAttack.damage * shield, enemyAttack.damage)
+        return min(armor + enemyAttack.physical() * shield, enemyAttack.physical())
     }
 
     open fun minusHp(minus: Double) {
@@ -106,13 +103,13 @@ open class Hero() {
     }
 
     open fun incomingDamage() {
-        damage += damage * inc
+        damageFactor += inc.toFloat()
     }
 
     open fun endBattle() {
         hp = maxHp.toDouble()
         money += 100
-        damage = maxDamage.toDouble()
+        damageFactor = 1f
     }
 
     open fun regeneration() {
@@ -224,6 +221,12 @@ open class Hero() {
                 "money" to "Деньги",
         )
         val withPercent: MutableSet<String> = mutableSetOf("crit", "critChance", "inc", "shield")
+
+        fun byClass(nameClass: String, username: String = "no_name"): Hero {
+            val hero = Class.forName("ru.lytvest.aeon.heroes.$nameClass").newInstance() as Hero
+            hero.username = username
+            return hero
+        }
 
     }
 }

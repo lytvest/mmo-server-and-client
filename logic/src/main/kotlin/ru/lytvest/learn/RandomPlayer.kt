@@ -28,8 +28,7 @@ fun main(){
     val gson = GsonBuilder().setPrettyPrinting().create()
 
     val battle1 = Battle("Hero", "Hero")
-    pl1.preparation()
-    pl2.preparation()
+
     battle1.nextGame(pl1, pl2)
     println(gson.toJson(pl1.random))
     println(gson.toJson(pl2.random))
@@ -37,8 +36,7 @@ fun main(){
     println("${battle1.leftWins} ${battle1.rightWins} ${pl1.listBuys} ${pl2.listBuys}" )
 
     val battle2 = Battle("Hero", "Hero")
-    pl1.preparation()
-    pl2.preparation()
+
     battle2.nextGame(pl2, pl1)
     println(gson.toJson(pl1.random))
     println(gson.toJson(pl2.random))

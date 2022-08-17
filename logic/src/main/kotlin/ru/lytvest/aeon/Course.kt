@@ -1,16 +1,16 @@
 package ru.lytvest.aeon
 
 data class Course(
-    val you: MutableMap<String, Double> = mutableMapOf<String, Double>(),
-    val enemy: MutableMap<String, Double> = mutableMapOf<String, Double>()
+    val you: MutableMap<String, Double> = mutableMapOf(),
+    val enemy: MutableMap<String, Double> = mutableMapOf()
 ) {
     override fun toString(): String {
         return buildString {
-            append("Left: | ")
+            append("You: | ")
             for((name, c) in you)
                 append(name).append(" : ").append(c).append(" | ")
             append("\n")
-            append("Right: | ")
+            append("Enemy: | ")
             for((name, c) in enemy)
                 append(name).append(" : ").append(c).append(" | ")
             append("\n")

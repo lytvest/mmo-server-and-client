@@ -4,6 +4,10 @@ apply plugin: "kotlin"
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10"
     implementation 'com.google.code.gson:gson:2.9.0'
+
+    testImplementation(platform('org.junit:junit-bom:5.9.0'))
+    testImplementation('org.junit.jupiter:junit-jupiter')
+
 }
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8

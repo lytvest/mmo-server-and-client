@@ -1,15 +1,16 @@
 {
   "type": "ru.lytvest.learn.RandomPlayer",
   "info": {
-    "sid": 513641162,
+    "sid": -1804807251,
     "errors": 3,
     "listBuys": [
-      "opt-damage",
+      "shield",
       "spell",
       "spell",
+      "shield",
       "critChance",
       "regen",
-      "regen"
+      "inc"
     ],
     "id": 2,
     "heroClass": "Hero"
