@@ -12,6 +12,12 @@ class Item : ArrayList<Entity>(4) {
         return null
     }
 
+    fun <T : Any> removeAll(clazz: KClass<T>) {
+        removeIf {
+            clazz.isInstance(it)
+        }
+    }
+
     fun <T : Any> contain(clazz: KClass<T>):Boolean {
         return find(clazz) != null
     }

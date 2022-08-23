@@ -1,5 +1,5 @@
 package ru.lytvest.model
 
 interface Eat {
-    fun eat(grass: Grass, world: World): Boolean
+    fun eat(item: Item, world: World): Boolean
 }

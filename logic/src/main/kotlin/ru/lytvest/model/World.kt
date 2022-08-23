@@ -1,6 +1,7 @@
 package ru.lytvest.model
 
 import kotlin.random.Random
+import kotlin.reflect.KClass
 
 
 open class Block : Entity()
@@ -34,13 +35,7 @@ class World {
     }
 
     fun update(){
-        for (y in 0 until height) {
-            for (x in 0 until width) {
-                for(item in get(x, y).toList()){
-                    item.update(this)
-                }
-            }
-        }
+        arr.flatten().flatten().forEach{ it.update(this) }
     }
 
     fun printWorld() {
@@ -64,6 +59,19 @@ class World {
         newEntity.x = p.x
         newEntity.y = p.y
     }
+
+    fun <T : Any> removeAll(p: Position, clazz: KClass<T>){
+        get(p).removeAll(clazz)
+    }
+
+    fun <T : Entity> removeAll(e: T) {
+        get(e).removeAll(e::class)
+    }
+
+    fun <T : Entity> remove(e: T) {
+        get(e).remove(e)
+    }
+
 
     fun fillWorld() {
         val grassV = 0.4f

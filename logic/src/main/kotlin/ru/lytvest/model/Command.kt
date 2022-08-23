@@ -17,7 +17,9 @@ enum class Execute {
     MOVE,
     EAT,
     RUN_AT,
-    FIND_GRASS
+    FIND_GRASS,
+    ATTACK,
+    FIND_COW
 }
 
 enum class Ways {
@@ -115,7 +117,6 @@ class Commands() {
                     index
                 )
             }
-
             else -> false
         }
 
@@ -129,9 +130,35 @@ class Commands() {
         index: Int
     ) = when (command.execute) {
         Execute.MOVE -> movies(world, entity, command.executeValue)
-        Execute.EAT -> cooking(entity, world)
+        Execute.EAT -> entity.eat(world[entity], world)
         Execute.RUN_AT -> runAt(index, command.executeValue, world, entity)
         Execute.FIND_GRASS -> findGrass(entity, world)
+        Execute.FIND_COW -> true
+        Execute.ATTACK -> {
+            when(Ways.from(command.executeValue)){
+                Ways.UP -> attackTo(world, entity.up())
+                Ways.LEFT -> attackTo(world, entity.left())
+                Ways.RIGHT -> attackTo(world, entity.right())
+                Ways.DOWN -> attackTo(world, entity.down())
+                Ways.FIND -> {
+                    entity.find?.let { pos ->
+                        entity.ways().find { it.x == pos.x && it.y == pos.y }?.let { attackTo(world, it) }
+                    } ?: false
+                }
+            }
+        }
+    }
+
+    private fun attackTo(world: World, p: Position): Boolean {
+        return world[p].find(Animal::class)?.let {
+            if (it.hp > 20)
+                it.hp -= 20
+            else {
+                it.hp = 0
+                it.death(world)
+            }
+            true
+        } ?: false
     }
 
     private fun findGrass(entity: Animal, world: World): Boolean {
@@ -149,14 +176,6 @@ class Commands() {
             work(executeValue % list.size, world, entity)
         }
 
-    private fun cooking(entity: Animal, world: World) = when (entity) {
-        is Eat -> {
-            val grass = world[entity].find(Grass::class)
-            grass?.let { entity.eat(it, world) } ?: false
-        }
-
-        else -> false
-    }
 
     private fun movies(world: World, animal: Animal, executeValue: Int):Boolean {
         println("move ${Ways.from(executeValue)} start ${animal.x} ${animal.y} ${world[animal]}")
