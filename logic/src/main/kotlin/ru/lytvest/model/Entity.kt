@@ -1,18 +1,15 @@
 package ru.lytvest.model
 
-open class Entity : Position(0, 0){
+open class Entity(world: World) : Position(world,0, 0){
 
 
-    open fun update(world: World) {
+    open fun update() {
 
     }
-
-
 
     companion object {
         var ids = 1
 
         fun nextId() = ids++
     }
-
 }

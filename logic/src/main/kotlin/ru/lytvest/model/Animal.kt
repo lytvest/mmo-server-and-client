@@ -1,26 +1,26 @@
 package ru.lytvest.model
 
-abstract class Animal : Block(), Hp, Eat {
-    override var hp: Int = 0
+abstract class Animal(world: World) : Block(world), Hp, Eat {
+    override var hp: Int = 90
     var find : Position? = null
     val commands = Commands()
     init {
         commands.randomize(this, 10)
     }
-    override fun update(world: World) {
-        super.update(world)
+    override fun update() {
+        super.update()
         hp -= 1
-        commands.workAll(world, this)
+        commands.workAll(this)
         if (hp <= 0) {
-            death(world)
+            death()
         }
     }
 
-    override fun eat(item: Item, world: World): Boolean {
+    override fun eat(item: Item): Boolean {
         return false
     }
 
-    abstract fun death(world: World)
+    abstract fun death()
 
 }
 

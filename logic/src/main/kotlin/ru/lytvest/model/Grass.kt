@@ -1,14 +1,14 @@
 package ru.lytvest.model
 
-class Grass : Entity(), Hp {
+class Grass(world: World) : Entity(world), Hp {
     override var hp: Int = 1
-    override fun update(world: World) {
+    override fun update() {
         hp += 1
         if (hp >= MAX_HP) {
             val p = ways().random()
             val item = world[p]
             if (!item.contain(Grass::class)){
-                world.put(p, Grass())
+                world.put(p, Grass(world))
             }
             hp = 5
         }

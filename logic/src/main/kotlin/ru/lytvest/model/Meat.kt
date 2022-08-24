@@ -4,14 +4,14 @@ class Meat : Entity, Hp {
     override var hp: Int = 90
 
 
-    constructor(hp: Int) : super() {
+    constructor(world: World, hp: Int) : super(world) {
         this.hp = hp
     }
 
-    constructor() : super()
+    constructor(world: World) : super(world)
 
-    override fun update(world: World) {
-        super.update(world)
+    override fun update() {
+        super.update()
         hp -= 1
         if (hp <= 0){
             world.remove(this)

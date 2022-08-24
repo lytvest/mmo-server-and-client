@@ -1,7 +1,7 @@
 package ru.lytvest.model
 
-class Wolf : Animal() {
-    override fun eat(item: Item, world: World): Boolean {
+class Wolf(world: World) : Animal(world) {
+    override fun eat(item: Item): Boolean {
         return item.find(Meat::class)?.let { meat ->
             if (meat.hp > 30){
                 meat.hp -= 30
@@ -15,8 +15,8 @@ class Wolf : Animal() {
         } ?: false
     }
 
-    override fun death(world: World) {
+    override fun death() {
         world.remove(this)
-        world.put(this, Meat(50))
+        world.put(this, Meat(world, 50))
     }
 }

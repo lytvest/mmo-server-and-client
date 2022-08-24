@@ -3,13 +3,13 @@ package ru.lytvest.model
 import kotlin.math.min
 
 
-class Cow : Animal() {
+class Cow(world: World) : Animal(world) {
     var id = Entity.nextId()
 
-    override fun update(world: World) {
-        super.update(world)
+    override fun update() {
+        super.update()
     }
-    override fun eat(item: Item, world: World): Boolean {
+    override fun eat(item: Item): Boolean {
         item.find(Grass::class)?.let { grass ->
             if (grass.hp > 0) {
                 val eat = min(grass.hp, 5)
@@ -27,8 +27,8 @@ class Cow : Animal() {
         return "${id % 100}C$hp"
     }
 
-    override fun death(world: World) {
+    override fun death() {
         world.remove(this)
-        world.put(this, Meat(100))
+        world.put(this, Meat(world, 100))
     }
 }

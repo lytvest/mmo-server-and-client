@@ -41,12 +41,13 @@ data class Command(var ifs: Ifs, var ifValue: Int, var execute: Execute, var exe
 
 class Commands() {
     var list = arrayOf(Command(Ifs.ALWAYS, 0, Execute.MOVE, 0), Command(Ifs.ALWAYS, 0, Execute.MOVE, 0))
+    @Transient
     val alreadyRun = mutableSetOf<Int>()
 
-    fun workAll(world: World, animal: Animal) {
+    fun workAll(animal: Animal) {
 
         for (i in list.indices) {
-            if (work(i, world, animal)) {
+            if (work(i, animal)) {
                 println("$animal -> ${list[i]}")
                 break
             }
@@ -79,8 +80,9 @@ class Commands() {
         else -> Execute.values()
     }
 
-    fun work(index: Int, world: World, entity: Animal): Boolean {
+    fun work(index: Int, entity: Animal): Boolean {
         val comm = list[index]
+        val world = entity.world
 
         fun findGrassAndExecute(poss: List<Position>) =
             poss.find { world[it].contain(Grass::class) }?.let { executeCommands(comm, world, entity, index) } ?: false
@@ -91,17 +93,17 @@ class Commands() {
             Ifs.NONE -> false
             Ifs.ALWAYS -> executeCommands(comm, world, entity, index)
             Ifs.LEFT_GRASS_EQ -> {
-                val p = Position(entity.x - len, entity.y)
+                val p = Position(world,entity.x - len, entity.y)
                 findGrassAndExecute(listOf(p))
             }
 
             Ifs.LEFT_GRASS_MORE -> {
-                val poss = List(10 - len) { Position(entity.x - it - len, entity.y) }
+                val poss = List(10 - len) { Position(world, entity.x - it - len, entity.y) }
                 findGrassAndExecute(poss)
             }
 
             Ifs.LEFT_GRASS_LESS -> {
-                val poss = List(len + 1) { Position(entity.x - it, entity.y) }
+                val poss = List(len + 1) { Position(world, entity.x - it, entity.y) }
                 findGrassAndExecute(poss)
             }
 
@@ -130,8 +132,8 @@ class Commands() {
         index: Int
     ) = when (command.execute) {
         Execute.MOVE -> movies(world, entity, command.executeValue)
-        Execute.EAT -> entity.eat(world[entity], world)
-        Execute.RUN_AT -> runAt(index, command.executeValue, world, entity)
+        Execute.EAT -> entity.eat(world[entity])
+        Execute.RUN_AT -> runAt(index, command.executeValue, entity)
         Execute.FIND_GRASS -> findGrass(entity, world)
         Execute.FIND_COW -> true
         Execute.ATTACK -> {
@@ -155,7 +157,7 @@ class Commands() {
                 it.hp -= 20
             else {
                 it.hp = 0
-                it.death(world)
+                it.death()
             }
             true
         } ?: false
@@ -168,12 +170,12 @@ class Commands() {
         return true
     }
 
-    private fun runAt(index: Int, executeValue: Int, world: World, entity: Animal) =
+    private fun runAt(index: Int, executeValue: Int, entity: Animal) =
         if (alreadyRun.contains(index))
             false
         else {
             alreadyRun.add(index)
-            work(executeValue % list.size, world, entity)
+            work(executeValue % list.size, entity)
         }
 
 
@@ -210,5 +212,5 @@ class Commands() {
 
 
 fun main(){
-    println(Commands().apply { randomize(Cow(), 10) })
+    println(Commands().apply { randomize(Cow(WorldImpl()), 10) })
 }
