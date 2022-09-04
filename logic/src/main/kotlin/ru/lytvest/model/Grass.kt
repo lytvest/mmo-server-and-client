@@ -1,5 +1,7 @@
 package ru.lytvest.model
 
+import kotlin.random.Random
+
 class Grass(world: World) : Entity(world), Hp {
     override var hp: Int = 1
     override fun update() {
@@ -10,7 +12,7 @@ class Grass(world: World) : Entity(world), Hp {
             if (!item.contain(Grass::class)){
                 world.put(p, Grass(world))
             }
-            hp = 5
+            hp -= (Random.nextInt(2) + 1)
         }
     }
 

@@ -48,7 +48,7 @@ class Commands() {
 
         for (i in list.indices) {
             if (work(i, animal)) {
-                println("$animal -> ${list[i]}")
+//                println("$animal -> ${list[i]}")
                 break
             }
         }
@@ -180,7 +180,7 @@ class Commands() {
 
 
     private fun movies(world: World, animal: Animal, executeValue: Int):Boolean {
-        println("move ${Ways.from(executeValue)} start ${animal.x} ${animal.y} ${world[animal]}")
+//        println("move ${Ways.from(executeValue)} start ${animal.x} ${animal.y} ${world[animal]}")
         val a = when (Ways.from(executeValue)) {
             Ways.UP -> world.move(animal, animal.up())
             Ways.LEFT -> world.move(animal, animal.left())
@@ -188,7 +188,7 @@ class Commands() {
             Ways.DOWN -> world.move(animal, animal.down())
             Ways.FIND -> moveToFind(animal, world)
         }
-        println("move ${Ways.from(executeValue)} end ${animal.x} ${animal.y} ${world[animal]}")
+//        println("move ${Ways.from(executeValue)} end ${animal.x} ${animal.y} ${world[animal]}")
         return a
     }
 

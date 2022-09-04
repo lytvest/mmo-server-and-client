@@ -26,7 +26,7 @@ abstract class GeneticAlgorithm<CHR>(
         val counted = appraisal(chromes).zip(chromes).sortedBy { -it.first }
         bestResult = counted[0].first
         val sorted = counted.map{ it.second }
-        println("best ${sorted.first()} -> $bestResult")
+//        println("best ${sorted.first()} -> $bestResult")
         val bestNumber = (numberChromosomes * percentBest).toInt()
         val best = sorted.slice(0..bestNumber)
         //val forMerge = sorted.slice(bestNumber until sorted.size)

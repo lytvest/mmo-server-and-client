@@ -81,5 +81,7 @@ open class Position (world: World, _x: Int, _y: Int) {
         return result
     }
 
-
+    override fun toString(): String {
+        return "$x $y"
+    }
 }

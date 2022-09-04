@@ -16,7 +16,7 @@ fun <T : Any> T.log(msg: String) {
 class Starter : ApplicationAdapter() {
 
     override fun create() {
-        SceneManager.push { LoadingScene { BattleScene() } }
+        SceneManager.push { LoadingScene { GameScene() } }
         log("started")
     }
 

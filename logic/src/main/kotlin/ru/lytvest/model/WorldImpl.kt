@@ -14,8 +14,8 @@ import kotlin.reflect.KClass
 
 class WorldImpl : World(){
 
-    override var width = 7
-    override var height = 7
+    override var width = 20
+    override var height = 20
 
     var arr = Array<Array<Item>>(width) { Array(height) { Item() } }
 

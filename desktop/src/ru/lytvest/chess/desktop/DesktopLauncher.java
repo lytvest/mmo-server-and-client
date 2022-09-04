@@ -14,8 +14,8 @@ public class DesktopLauncher {
 		//TexturePacker.process(settings, "../../source",".","skin.atlas");
 
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = 16 * 100; // 16 * 90;
-		config.height = 9 * 100 ;// 9 * 90;
+		config.width = 16 * 80; // 16 * 90;
+		config.height = 9 * 80 ;// 9 * 90;
 		config.x = 10;
 		config.y = 10;
 		new LwjglApplication(new Starter(), config);
